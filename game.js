@@ -22,7 +22,7 @@ function onKey(event)
 		rect2.y -= moveSpeed;
 	else if (event.key == 's')
 		rect2.y += moveSpeed;
-	else if (event.key == 'a')
+	if (event.key == 'a')
 		rect2.x -= moveSpeed;
 	else if (event.key == 'd')
 		rect2.x += moveSpeed;
