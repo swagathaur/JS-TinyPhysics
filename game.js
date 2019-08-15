@@ -12,22 +12,6 @@ function timestamp()
 		return new Date().getTime();
 }
 
-// input
-document.addEventListener('keydown', function(ev) { return onKey(ev);  }, false);
-//document.addEventListener('keyup',   function(ev) { return onKey(ev); }, false);
-const moveSpeed = 5;
-function onKey(event)
-{
-	if (event.key == 'w')
-		rect2.y -= moveSpeed;
-	else if (event.key == 's')
-		rect2.y += moveSpeed;
-	if (event.key == 'a')
-		rect2.x -= moveSpeed;
-	else if (event.key == 'd')
-		rect2.x += moveSpeed;
-}
-
 var rect1 = new Rect(width / 2, height / 2, 32, 32);
 var rect2 = new Rect((width / 2) + 64, (height / 2) + 64, 32, 32);
 
@@ -48,8 +32,14 @@ function frame() {
 }
 frame();
 
+const moveSpeed = 5;
 function update(dt)
 {
+	if (movement[keybinds.LEFT])
+		rect2.x -= moveSpeed;
+	else if (movement[keybinds.RIGHT])
+		rect2.x += moveSpeed;
+
 	if (rect1.Intersects(rect2))
 		console.log("COLLISION");
 }
