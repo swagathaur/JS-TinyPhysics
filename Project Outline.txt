@@ -1,0 +1,16 @@
+Puzzle Platformer
+Elements of humour
+
+Concept:
+You save people by carrying them all, specifically on your back,  
+while traversing dangerous and puzzling terrain. The people you carry will limit what terrain 
+you can cross, limiting movement up and down walls (maybe?), the ability to walk under small spaces
+and effecting jump height and run speed. The citizens can be released to make certain platform elements easier.
+The weight of citizens could also potentially be used as another form of puzzle element, 
+being used to push hard to reach buttons and force quick rection movements afterwards.
+
+Systems required by current scope (May or may not be in order of use and necessity): 
+- Collision
+- Sprite rendering
+- Basic Physics (weight and movement based off a gravity modifier)
+- Sprite dithering
