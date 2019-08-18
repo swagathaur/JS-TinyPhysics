@@ -12,13 +12,10 @@ function timestamp()
 		return new Date().getTime();
 }
 
-var rect1 = new Rect(0, 0, 1, 1);
-var rect2 = new Rect(2, 2, 1, 1);
-
-var body1 = new RigidBody(1, 1, false, false);
-var body2 = new RigidBody(1, 1, false, false);
-body1.position = new Vec2(rect1.x, rect1.y);
-body2.position = new Vec2(rect2.x, rect2.y);
+var body1 = new RigidBody(new Rect(0, 0, 1, 1), 1, 1, false, false);
+var body2 = new RigidBody(new Rect(0, 0, 1, 1), 1, 1, false, false);
+body1.position = new Vec2(-1, 0);
+body2.position = new Vec2(1, 0);
 
 var cameraPosition = new Vec2(0, 0);
 var pixelsPerUnit = 32;
@@ -30,13 +27,14 @@ var now;
 var last = timestamp();
 
 function frame() {
+	
 	now = timestamp();
 	dt = (now - last) / 1000;
 	last = now;
-
-	update(dt);
+	
 	draw();
-
+	update(dt);
+	
 	requestAnimationFrame(frame);
 }
 frame();
@@ -49,26 +47,24 @@ function update(dt)
 	else if (movement[keybinds.RIGHT])
 		body1.AddForce(new Vec2(1, 1), new Vec2(0, 0));
 
-	if (rect1.Intersects(rect2))
+	if (body1.collider.Intersects(body2.collider))
 		console.log("COLLISION");
 		
-	body1.UpdateForces(dt);
-	body2.UpdateForces(dt);
-	rect1.x = body1.position.x;
-	rect1.y = body1.position.y;
-	rect2.x = body2.position.x;
-	rect2.y = body2.position.y;
+	body1.Update(dt);
+	body2.Update(dt);
 }
 
 var black = '#000000'
 var purple = '#542437';
 var red = '#550000'
 
+function GetCameraOffset()
+{	
+	return Vec2.Add(new Vec2(-cameraPosition.x, -cameraPosition.y), new Vec2(width / 2, height / 2));
+}
+
 function draw()
 {
 	context.fillStyle = '#555555';
 	context.fillRect(0, 0, width, height);
-	cameraOffset = Vec2.Add(new Vec2(-cameraPosition.x, -cameraPosition.y), new Vec2(width / 2, height / 2));
-	rect1.Draw(black, cameraOffset, pixelsPerUnit);
-	rect2.Draw(red, cameraOffset, pixelsPerUnit);
 }
