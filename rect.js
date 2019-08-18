@@ -16,9 +16,9 @@ class Rect
 			this.y < other.y + other.h && this.y + this.h > other.y);
 	}
 
-	Draw(colour)
+	Draw(colour, positionOffset, pixelsPerUnit)
 	{
 		context.fillStyle = colour;
-		context.fillRect(this.x, this.y, this.w, this.h);
+		context.fillRect((this.x * pixelsPerUnit) + positionOffset.x, (-this.y * pixelsPerUnit) + positionOffset.y, this.w * pixelsPerUnit, this.h * pixelsPerUnit);
 	}
 }

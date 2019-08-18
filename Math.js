@@ -5,24 +5,36 @@ class Vec2
         this.x = x;
         this.y = y;
     }
+
+    //Adds two vectors
+    static Add(lhs, rhs)
+    {
+        return new Vec2(lhs.x + rhs.x, lhs.y + rhs.y);
+    }
+
+    //Multiplies vector by the given num
+    static Multiply(lhs, rhs)
+    {
+        return new Vec2(lhs.x *rhs, lhs.y * rhs);
+    }
 }
 
-Cross(ax, ay, bx, by)
+function Cross(ax, ay, bx, by)
 {
-    return (ax * by) - (ay * bx)
+    return (ax * by) - (ay * bx);
 }
 
-Cross(ax, ay, scaler)
+function Cross(ax, ay, scaler)
 {
-    return Vec2(s * ay, -s * ax) 
+    return Vec2(s * ay, -s * ax) ;
 }
 
-Cross(scaler, ax, ay)
+function Cross(scaler, ax, ay)
 {
-    return Vec2(-s * ay, s * ax) 
+    return Vec2(-s * ay, s * ax) ;
 }
 
-Distance(vecA, vecB)
+function Distance(vecA, vecB)
 {
-    return Math.sqrt((vecA.x - vecB.x)^2 + (vecA.y - vecB.y)^2)
+    return Math.sqrt((vecA.x - vecB.x)^2 + (vecA.y - vecB.y)^2);
 }
