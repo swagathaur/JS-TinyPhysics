@@ -14,6 +14,7 @@ function timestamp()
 
 var rect1 = new Rect(0, 0, 1, 1);
 var rect2 = new Rect(2, 2, 1, 1);
+var testRect = new Rect(-10, 10, 1, 1);
 
 var body1 = new RigidBody(1, 1, false, false);
 var body2 = new RigidBody(1, 1, false, false);
@@ -28,6 +29,8 @@ var fps = 60;
 var dt = 0;
 var now;
 var last = timestamp();
+
+var sprite = createSprite("LeonsWeirdNakedGirlThing.png");
 
 function frame() {
 	now = timestamp();
@@ -69,6 +72,8 @@ function draw()
 	context.fillStyle = '#555555';
 	context.fillRect(0, 0, width, height);
 	cameraOffset = Vec2.Add(new Vec2(-cameraPosition.x, -cameraPosition.y), new Vec2(width / 2, height / 2));
-	rect1.Draw(black, cameraOffset, pixelsPerUnit);
-	rect2.Draw(red, cameraOffset, pixelsPerUnit);
+	rect1.DrawSprite(sprite, cameraOffset, pixelsPerUnit);
+	rect2.DrawColour(red, cameraOffset, pixelsPerUnit);
+
+	testRect.DrawSpriteDithered(sprite, cameraOffset, pixelsPerUnit, 0.2);
 }
