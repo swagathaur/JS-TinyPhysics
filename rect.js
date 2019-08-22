@@ -16,10 +16,23 @@ class Rect
 			this.y < other.y + other.h && this.y + this.h > other.y);
 	}
 
-	Draw(colour)
+	Draw(colour, rotation = 0)
 	{
 		context.fillStyle = colour;
-		context.fillRect((this.x * pixelsPerUnit) + GetCameraOffset().x, (-this.y * pixelsPerUnit) + GetCameraOffset().y, this.w * pixelsPerUnit, this.h * pixelsPerUnit);
+		var center = new Vec2((this.x * pixelsPerUnit) + GetCameraOffset().x, (-this.y * pixelsPerUnit) + GetCameraOffset().y)
+		//Translate the canvas and rotate to rotate around sprite center
+		context.translate(	center.x, 
+							center.y);
+		context.rotate(rotation* Math.PI / 180);		
+		context.translate(	-center.x, 
+							-center.y);
+		//Draw the rect
+		context.fillRect(	center.x - (this.w * .5 * pixelsPerUnit),
+							center.y - (this.h * .5 * pixelsPerUnit), 
+							this.w * pixelsPerUnit, 
+							this.h * pixelsPerUnit);
+		//Reset canvas to default transform
+		context.setTransform(1, 0, 0, 1, 0, 0);
 	}
 	
 	DrawSprite(sprite, positionOffset, pixelsPerUnit)

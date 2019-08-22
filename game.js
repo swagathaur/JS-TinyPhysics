@@ -46,9 +46,13 @@ const moveSpeed = 5;
 function update(dt)
 {
 	if (movement[keybinds.LEFT])
-		body1.AddForce(new Vec2(-1, 1), new Vec2(0, 0));
-	else if (movement[keybinds.RIGHT])
-		body1.AddForce(new Vec2(1, 1), new Vec2(0, 0));
+		body1.AddForce(new Vec2(-1, 0), new Vec2(0, 0));
+	if (movement[keybinds.RIGHT])
+		body1.AddForce(new Vec2(1, 0), new Vec2(0, 0));
+	if (movement[keybinds.UP])
+		body1.AddForce(new Vec2(0, 1), new Vec2(-1, 0));
+	if (movement[keybinds.DOWN])
+		body1.AddForce(new Vec2(0, -1), new Vec2(0, 0));
 
 	if (body1.collider.Intersects(body2.collider))
 		console.log("COLLISION");

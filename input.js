@@ -2,7 +2,9 @@
 // keybinds
 const keybinds = {
 	LEFT: 'a',
-	RIGHT: 'd'
+	RIGHT: 'd',
+	UP: 'w',
+	DOWN: 's'
 }
 
 var movement = {};

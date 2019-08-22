@@ -49,7 +49,7 @@ class RigidBody
     AddTorque(force, positionOffset)
     {
         var torque = (force.y * positionOffset.x) - (force.x * positionOffset.y);
-        this.angularVelocity += torque / this.inertia;
+        this.angularVelocity += -torque / (this.inertia);
     }
 
     //Takes a Vec2 that dictates the offset from the centre of the body.
@@ -68,6 +68,6 @@ class RigidBody
         this.collider.y = this.position.y;
 
         //Turn this off when sprites are done
-        this.collider.Draw('#550000')
+        this.collider.Draw('#550000', this.rotation);
     }
 }
