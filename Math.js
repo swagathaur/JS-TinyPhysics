@@ -11,12 +11,34 @@ class Vec2
     {
         return new Vec2(lhs.x + rhs.x, lhs.y + rhs.y);
     }
+    //Subtracts two vectors
+    static Subtract(lhs, rhs)
+    {
+        return new Vec2(lhs.x - rhs.x, lhs.y - rhs.y);
+    }
 
     //Multiplies vector by the given num
     static Multiply(lhs, rhs)
     {
         return new Vec2(lhs.x *rhs, lhs.y * rhs);
     }
+    //Divides vectors by the given num
+    static Divide(lhs, rhs)
+    {
+        return new Vec2(lhs.x / rhs, lhs.y / rhs);
+    }
+
+    //Projects a given point onto a directional vector
+    static Project(point, direction)
+    {
+        tempVal = Vec2.Dot(point, direction) / 
+                ((direction.x * direction.x) + (direction.y * direction.y));
+        return Vec2.Multiply(direction, tempVal)
+    }
+}
+function Dot(lhs, rhs)
+{
+    return (lhs.x * rhs.x) + (lhs.y * rhs.y);
 }
 
 function Cross(ax, ay, bx, by)
