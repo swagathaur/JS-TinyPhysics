@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "D:/Repos/JS13KBack/index.html",
+            "url": "C:/Repos/JS13KBack/index.html",
             "webRoot": "${workspaceFolder}"
         }
     ]

@@ -26,37 +26,37 @@ class RigidBody
     
     UpperLeft()
     {
-        sinVal = Math.sin(this.rotation);
-        cosVal = Math.cos(this.rotation);
-        x = -this.collider.w * 0.5;
-        y = this.collider.h * 0.5;
+        var sinVal = Math.sin(this.rotation);
+        var cosVal = Math.cos(this.rotation);
+        var x = -this.collider.w * 0.5;
+        var y = this.collider.h * 0.5;
         return new Vec2(this.position.x + (x * cosVal) - (y * sinVal), this.position.y + (y * cosVal) + (x * sinVal));
     }
 
     UpperRight()
     {
-        sinVal = Math.sin(this.rotation);
-        cosVal = Math.cos(this.rotation);
-        x = this.collider.w * 0.5;
-        y = this.collider.h * 0.5;
+        var sinVal = Math.sin(this.rotation);
+        var cosVal = Math.cos(this.rotation);
+        var x = this.collider.w * 0.5;
+        var y = this.collider.h * 0.5;
         return new Vec2(this.position.x + (x * cosVal) - (y * sinVal), this.position.y + (y * cosVal) + (x * sinVal));
     }
 
     LowerLeft()
     {
-        sinVal = Math.sin(this.rotation);
-        cosVal = Math.cos(this.rotation);
-        x = -this.collider.w * 0.5;
-        y = -this.collider.h * 0.5;
+        var sinVal = Math.sin(this.rotation);
+        var cosVal = Math.cos(this.rotation);
+        var x = -this.collider.w * 0.5;
+        var y = -this.collider.h * 0.5;
         return new Vec2(this.position.x + (x * cosVal) - (y * sinVal), this.position.y + (y * cosVal) + (x * sinVal));
     }
     
     LowerRight()
     {
-        sinVal = Math.sin(this.rotation);
-        cosVal = Math.cos(this.rotation);
-        x = this.collider.w * 0.5;
-        y =  -this.collider.h * 0.5;
+        var sinVal = Math.sin(this.rotation);
+        var cosVal = Math.cos(this.rotation);
+        var x = this.collider.w * 0.5;
+        var y =  -this.collider.h * 0.5;
 
         return new Vec2(this.position.x + (x * cosVal) - (y * sinVal), this.position.y + (y * cosVal) + (x * sinVal));
     }
@@ -97,7 +97,7 @@ class RigidBody
     
     Update(delta)
     {
-        this.AddForce(Vec2.Multiply(Vec2.Multiply(this.gravity, this.mass), delta), new Vec2(0,0))
+        //this.AddForce(Vec2.Multiply(Vec2.Multiply(this.gravity, this.mass), delta), new Vec2(0,0))
         this.position = Vec2.Add(this.position, Vec2.Multiply(this.velocity, delta));
         this.rotation += this.angularVelocity * delta;
         

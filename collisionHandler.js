@@ -1,4 +1,4 @@
-function CheckColision(body1, body2)
+function HandleColision(body1, body2)
 {
     /*
     Axis1 = A.UR - A.UL
@@ -12,9 +12,37 @@ function CheckColision(body1, body2)
     axis3 = Vec2.Subtract(body2.UpperLeft(), body2.LowerLeft())
     axis4 = Vec2.Subtract(body2.UpperLeft(), body2.UpperRight())
     
-    //Get scalers for axis body1 and body2
-        //Check if min > max
-        //repeat till gap found
+    //Get scalars for axis body1 and body2
+    //X = Min, Y = Max
+    //If Body1Max < Body2Min on any axis, no colision is occuring.
+    a1b1Scalar = GetScalars(body1, axis1);
+    a1b2Scalar = GetScalars(body2, axis1);
+    if (!CheckScalarCrossover(a1b1Scalar, a1b2Scalar))
+        return;
+
+    a2b1Scalar = GetScalars(body1, axis2);
+    a2b2Scalar = GetScalars(body2, axis2);
+    if (!CheckScalarCrossover(a2b1Scalar, a2b2Scalar))
+        return;
+
+    a3b1Scalar = GetScalars(body1, axis3);
+    a3b2Scalar = GetScalars(body2, axis3);
+    if (!CheckScalarCrossover(a3b1Scalar, a3b2Scalar))
+        return;
+        
+    a4b1Scalar = GetScalars(body1, axis4);
+    a4b2Scalar = GetScalars(body2, axis4);
+    if (!CheckScalarCrossover(a4b1Scalar, a4b2Scalar))
+        return;
+
+    console.log("Their is a collision");
+}
+
+function CheckScalarCrossover(scalar1, scalar2)
+{
+    if (scalar1.x < scalar2.x)
+        return scalar1.y > scalar2.x;
+    return scalar2.y > scalar1.x;
 }
 
 function GetScalars(body, axis)
@@ -28,13 +56,12 @@ function GetScalars(body, axis)
 
     scalars = [Dot(Prj1, axis), Dot(Prj2, axis), Dot(Prj3, axis), Dot(Prj4, axis)]
     
-    foreach (scalar in scalars)
+    scalars.forEach(function(scalar)
     {
-
         if (scalar < minScalar)
-        minScalar = scalar;
+            minScalar = scalar;
         if (scalar > maxScalar)
-        maxScalar = scalar;        
-    }
+            maxScalar = scalar; 
+    });
     return new Vec2(minScalar, maxScalar);
 }

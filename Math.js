@@ -31,7 +31,7 @@ class Vec2
     //Projects a given point onto a directional vector
     static Project(point, direction)
     {
-        tempVal = Vec2.Dot(point, direction) / 
+        var tempVal = Dot(point, direction) / 
                 ((direction.x * direction.x) + (direction.y * direction.y));
         return Vec2.Multiply(direction, tempVal)
     }
