@@ -12,10 +12,23 @@ function timestamp()
 		return new Date().getTime();
 }
 
-var body1 = new RigidBody(new Rect(0, 0, 1, 1), 1, 1, false, false);
-var body2 = new RigidBody(new Rect(0, 0, 1, 1), 1, 1, false, false);
+var body1 = new RigidBody(new Rect(0, 0, .8, 1.5), 1, 1, false, false);
+var body2 = new RigidBody(new Rect(0, 0, 1, 0.5), 1, 1, false, false);
 body1.position = new Vec2(-1, 0);
 body2.position = new Vec2(1, 0);
+
+var topWall = new RigidBody(new Rect(0, 0, 10000, 1), 100000000, 1, true, true);
+topWall.position = new Vec2(0, 13);
+var bottomWall = new RigidBody(new Rect(0, 0, 10000, 1), 100000000, 1, true, true);
+bottomWall.position = new Vec2(0, -13);
+var leftWall = new RigidBody(new Rect(0, 0, 1, 10000), 100000000, 1, true, true);
+leftWall.position = new Vec2(-23, 0);
+var rightWall = new RigidBody(new Rect(0, 0, 1, 10000), 100000000, 1, true, true);
+rightWall.position = new Vec2(23, 0);
+
+dynamicBodies = [body1, body2];
+staticBodies = [leftWall, rightWall, topWall, bottomWall];
+
 var testRect = new Rect(-10, 10, 1, 1);
 
 var cameraPosition = new Vec2(0, 0);
@@ -46,18 +59,22 @@ const moveSpeed = 5;
 function update(dt)
 {
 	if (movement[keybinds.LEFT])
-		body1.AddForce(new Vec2(-1, 0), new Vec2(0, 0));
+		body1.AddForce(new Vec2(-.4, 0), new Vec2(0, 0));
 	if (movement[keybinds.RIGHT])
-		body1.AddForce(new Vec2(1, 0), new Vec2(0, 0));
+		body1.AddForce(new Vec2(.4, 0), new Vec2(0, 0));
 	if (movement[keybinds.UP])
-		body1.AddForce(new Vec2(0, 1), new Vec2(0, 0));
+		body1.AddForce(new Vec2(0, .4), new Vec2(0, 0));
 	if (movement[keybinds.DOWN])
-		body1.AddForce(new Vec2(0, -1), new Vec2(0, 0));
+		body1.AddForce(new Vec2(0, -.4), new Vec2(0, 0));
 
-	HandleCollision(body2, body1);
-		
-	body1.Update(dt);
-	body2.Update(dt);
+	HandleCollision(body1, body2);
+	dynamicBodies.forEach(dynaBod => {
+		staticBodies.forEach(staticBod => {
+			staticBod.Update(dt);
+			HandleCollision(dynaBod, staticBod);
+		});
+		dynaBod.Update(dt);
+	});
 }
 
 var black = '#000000'

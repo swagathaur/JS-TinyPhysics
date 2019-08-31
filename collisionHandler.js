@@ -83,8 +83,8 @@ function HandleCollision(body1, body2)
 function ResolveCollision(body1, body2, collisionPoint, collisionNormal)
 {
     //Bad resolution, dlt this
-    body1.position = Vec2.Subtract(body1.position, Vec2.Multiply(body1.velocity, 0.02));
-    body2.position = Vec2.Subtract(body2.position, Vec2.Multiply(body2.velocity, 0.02));
+    //body1.position = Vec2.Subtract(body1.position, Vec2.Multiply(body1.velocity, 0.02));
+    //body2.position = Vec2.Subtract(body2.position, Vec2.Multiply(body2.velocity, 0.02));
 
     //Get the correct restitution value for bounce
     restitution = body1.restitution > body2.restitution ? body2.restitution : body1.restitution;
@@ -93,6 +93,9 @@ function ResolveCollision(body1, body2, collisionPoint, collisionNormal)
     relativeVelocity = Vec2.Subtract(body2.velocity, body1.velocity);
     velocityAlongNormal = Dot(relativeVelocity, collisionNormal);
 
+    if (velocityAlongNormal > 0)
+        return;
+    
     //Calculate the impact scale using the uh, directness of impact (velocity along the normal)
     impulseScale = velocityAlongNormal * restitution;
     
