@@ -1,6 +1,6 @@
 class RigidBody
 {
-    constructor(colliderRect, mass = 1, resitution = 0.8, lockMovement = false, lockRotation = false)
+    constructor(colliderRect, mass = 1, restitution = 0.8, lockMovement = false, lockRotation = false)
     {
         this.collider = colliderRect;
         this.mass = mass;
@@ -8,7 +8,7 @@ class RigidBody
         this.lockMovement = lockMovement;
         this.lockRotation = lockRotation;
         
-        this.resitution = resitution;
+        this.restitution = restitution;
         
         this.velocity = new Vec2(0, 0);
         this.angularVelocity = 0;

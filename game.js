@@ -50,11 +50,11 @@ function update(dt)
 	if (movement[keybinds.RIGHT])
 		body1.AddForce(new Vec2(1, 0), new Vec2(0, 0));
 	if (movement[keybinds.UP])
-		body1.AddForce(new Vec2(0, 1), new Vec2(1, 0));
+		body1.AddForce(new Vec2(0, 1), new Vec2(0, 0));
 	if (movement[keybinds.DOWN])
 		body1.AddForce(new Vec2(0, -1), new Vec2(0, 0));
 
-	HandleColision(body2, body1);
+	HandleCollision(body2, body1);
 		
 	body1.Update(dt);
 	body2.Update(dt);
