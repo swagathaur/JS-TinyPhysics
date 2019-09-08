@@ -11,7 +11,7 @@ class RigidBody
         
         this.position = new Vec2(0, 0);
         this.rotation = 0;
-        this.gravity = new Vec2(0, -9.81);
+        this.gravity = new Vec2(0, -29.81);
         
         this.inverseMass = 1 / mass;
         
@@ -137,6 +137,9 @@ class RigidBody
         this.collider.y = this.position.y;
     
         //Turn this off when sprites are done
-        this.collider.Draw('#550000', this.rotation);
+        if (this.lockMovement)
+            this.collider.Draw('#550000', this.rotation);
+        else
+            this.collider.Draw('#542437', this.rotation);
     }
 }

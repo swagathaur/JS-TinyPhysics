@@ -32,14 +32,26 @@ var platform1 = new RigidBody(new Rect(0, 0, 20, 1), 100000000, true);
 platform1.position = new Vec2(-10, -5);
 var platform2 = new RigidBody(new Rect(0, 0, 5, 5), 100000000, true);
 platform2.position = new Vec2(-15, -2.5);
-var platform3 = new RigidBody(new Rect(0, 0, 10, 2), 100000000, true);
-platform3.position = new Vec2(17, 7.5);
+var platform3 = new RigidBody(new Rect(0, 0, 5, 2), 100000000, true);
+platform3.position = new Vec2(20, 7.5);
+var platform4 = new RigidBody(new Rect(0, 0, 2, 1), 100000000, true);
+platform4.position = new Vec2(-22, -10);
+var platform5 = new RigidBody(new Rect(0, 0, 1, 1), 100000000, true);
+platform5.position = new Vec2(-8, 4);
+var platform6 = new RigidBody(new Rect(0, 0, 1, 1), 100000000, true);
+platform6.position = new Vec2(0, 4);
+var platform7 = new RigidBody(new Rect(0, 0, 1, 1), 100000000, true);
+platform7.position = new Vec2(8, 4);
+var platform8 = new RigidBody(new Rect(0, 0, 1, 1), 100000000, true);
+platform8.position = new Vec2(14, 6);
 
 var rightWall = new RigidBody(new Rect(0, 0, 1, 10000), 100000000, true);
 rightWall.position = new Vec2(23, 0);
 
 dynamicBodies = [player, body1, body2];
-staticBodies = [leftWall, rightWall, topWall, bottomWall, platform1, platform2, platform3];
+staticBodies = [leftWall, rightWall, topWall, bottomWall, 
+	platform1, platform2, platform3, platform4, 
+	platform5, platform6, platform7, platform8];
 
 var testRect = new Rect(-10, 10, 1, 1);
 
@@ -78,7 +90,7 @@ function update(dt)
 	{
 		if (player.canMoveDown == false)
 		{			
-			player.AddForce(new Vec2(0, 13), new Vec2(0, 0));
+			player.AddForce(new Vec2(0, 20), new Vec2(0, 0));
 		}
 	}
 	
