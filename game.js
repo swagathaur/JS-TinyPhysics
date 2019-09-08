@@ -83,14 +83,14 @@ const moveSpeed = 5;
 function update(dt)
 {
 	if (movement[keybinds.LEFT])
-		player.AddForce(new Vec2(-.4, 0), new Vec2(0, 0));
+		player.AddForce(new Vec2(-1, 0), new Vec2(0, 0));
 	if (movement[keybinds.RIGHT])
-		player.AddForce(new Vec2(.4, 0), new Vec2(0, 0));
+		player.AddForce(new Vec2(1, 0), new Vec2(0, 0));
 	if (movement[keybinds.UP])
 	{
 		if (player.canMoveDown == false)
 		{			
-			player.AddForce(new Vec2(0, 20), new Vec2(0, 0));
+			player.AddForce(new Vec2(0, 35), new Vec2(0, 0));
 		}
 	}
 	

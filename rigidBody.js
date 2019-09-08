@@ -11,7 +11,9 @@ class RigidBody
         
         this.position = new Vec2(0, 0);
         this.rotation = 0;
-        this.gravity = new Vec2(0, -29.81);
+        this.gravity = new Vec2(0, -40);
+        this.drag = 2;
+        this.groundedFriction = 3;
         
         this.inverseMass = 1 / mass;
         
@@ -121,8 +123,8 @@ class RigidBody
             if (this.velocity.x >= 0)
                 this.velocity.x = 0;
         }
-
         
+        //Update position
         if (!this.lockMovement)
         {   
             this.AddForce(Vec2.Multiply(Vec2.Multiply(this.gravity, this.mass), delta), new Vec2(0,0))
@@ -133,8 +135,15 @@ class RigidBody
             this.velocity = new Vec2(0,0);
         }
 
+        //Move the collider
         this.collider.x = this.position.x;
         this.collider.y = this.position.y;
+
+        //Apply drag and friction
+        if (!this.canMoveDown)
+            this.velocity = Vec2.Subtract(this.velocity, Vec2.Multiply(this.velocity, this.groundedFriction * delta));
+        else
+            this.velocity = Vec2.Subtract(this.velocity, Vec2.Multiply(this.velocity, this.drag * delta));
     
         //Turn this off when sprites are done
         if (this.lockMovement)
