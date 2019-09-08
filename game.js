@@ -28,8 +28,18 @@ leftWall.position = new Vec2(-23, 0);
 var rightWall = new RigidBody(new Rect(0, 0, 1, 10000), 100000000, true);
 rightWall.position = new Vec2(23, 0);
 
+var platform1 = new RigidBody(new Rect(0, 0, 20, 1), 100000000, true);
+platform1.position = new Vec2(-10, -5);
+var platform2 = new RigidBody(new Rect(0, 0, 5, 5), 100000000, true);
+platform2.position = new Vec2(-15, -2.5);
+var platform3 = new RigidBody(new Rect(0, 0, 10, 2), 100000000, true);
+platform3.position = new Vec2(17, 7.5);
+
+var rightWall = new RigidBody(new Rect(0, 0, 1, 10000), 100000000, true);
+rightWall.position = new Vec2(23, 0);
+
 dynamicBodies = [player, body1, body2];
-staticBodies = [leftWall, rightWall, topWall, bottomWall];
+staticBodies = [leftWall, rightWall, topWall, bottomWall, platform1, platform2, platform3];
 
 var testRect = new Rect(-10, 10, 1, 1);
 
