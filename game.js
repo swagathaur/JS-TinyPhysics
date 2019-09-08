@@ -20,16 +20,16 @@ body1.position = new Vec2(5, -5);
 body2.position = new Vec2(6, -5);
 
 var topWall = new RigidBody(new Rect(0, 0, 10000, 1), 100000000, true);
-topWall.position = new Vec2(0, 13);
+topWall.position = new Vec2(0, 14);
 var bottomWall = new RigidBody(new Rect(0, 0, 10000, 1), 100000000, true);
-bottomWall.position = new Vec2(0, -13);
+bottomWall.position = new Vec2(0, -14);
 var leftWall = new RigidBody(new Rect(0, 0, 1, 10000), 100000000, true);
-leftWall.position = new Vec2(-23, 0);
+leftWall.position = new Vec2(-25, 0);
 var rightWall = new RigidBody(new Rect(0, 0, 1, 10000), 100000000, true);
-rightWall.position = new Vec2(23, 0);
+rightWall.position = new Vec2(25, 0);
 
-var platform1 = new RigidBody(new Rect(0, 0, 20, 1), 100000000, true);
-platform1.position = new Vec2(-10, -5);
+var platform1 = new RigidBody(new Rect(0, 0, 10, 1), 100000000, true);
+platform1.position = new Vec2(-15, -5);
 var platform2 = new RigidBody(new Rect(0, 0, 5, 5), 100000000, true);
 platform2.position = new Vec2(-15, -2.5);
 var platform3 = new RigidBody(new Rect(0, 0, 5, 2), 100000000, true);
@@ -39,14 +39,11 @@ platform4.position = new Vec2(-22, -10);
 var platform5 = new RigidBody(new Rect(0, 0, 1, 1), 100000000, true);
 platform5.position = new Vec2(-8, 4);
 var platform6 = new RigidBody(new Rect(0, 0, 1, 1), 100000000, true);
-platform6.position = new Vec2(0, 4);
+platform6.position = new Vec2(0, 2);
 var platform7 = new RigidBody(new Rect(0, 0, 1, 1), 100000000, true);
 platform7.position = new Vec2(8, 4);
 var platform8 = new RigidBody(new Rect(0, 0, 1, 1), 100000000, true);
 platform8.position = new Vec2(14, 6);
-
-var rightWall = new RigidBody(new Rect(0, 0, 1, 10000), 100000000, true);
-rightWall.position = new Vec2(23, 0);
 
 dynamicBodies = [player, body1, body2];
 staticBodies = [leftWall, rightWall, topWall, bottomWall, 
