@@ -1,17 +1,13 @@
 class RigidBody
 {
-    constructor(colliderRect, mass = 1, restitution = 0.8, lockMovement = false, lockRotation = false)
+    constructor(colliderRect, mass = 1, lockMovement = false)
     {
         this.collider = colliderRect;
         this.mass = mass;
         
         this.lockMovement = lockMovement;
-        this.lockRotation = lockRotation;
-        
-        this.restitution = restitution;
         
         this.velocity = new Vec2(0, 0);
-        this.angularVelocity = 0;
         
         this.position = new Vec2(0, 0);
         this.rotation = 0;
@@ -19,8 +15,11 @@ class RigidBody
         
         this.inverseMass = 1 / mass;
         
-        this.RecalulateInertia();
-        
+        this.canMoveUp = true;
+        this.canMoveLeft = true;
+        this.canMoveDown = true;
+        this.canMoveRight = true;
+                
         console.log("Initializing RigidBody");
     }
     
@@ -48,39 +47,10 @@ class RigidBody
         return Vec2.RotatePointAroundPivot(lowerRight, this.position, this.rotation);
     }
 
-    GetAxis()
-    {
-        var axis = [];
-        axis[0] = Vec2.Subtract(this.UpperRight(), this.UpperLeft());
-        axis[1] = Vec2.Subtract(this.UpperRight(), this.LowerRight());
-        axis[2] = Vec2.Subtract(this.LowerLeft(), this.LowerRight());
-        axis[3] = Vec2.Subtract(this.LowerLeft(), this.UpperLeft());
-        return axis;
-    }
-    
-    GetMinMaxProjections(axis)
-    {
-        projections = [Vec2.Project(UpperRight, axis),
-            Vec2.Project(UpperLeft, axis),
-            Vec2.Project(LowerRight, axis),
-            Vec2.Project(LowerLeft, axis)];
-            projections.sort(function (lhs, rhs) {
-                Dot(lhs, axis) - Dot(rhs, axis)
-            })
-        return [projections[0], projections[3]];
-    }
-
     SetMass(mass)
     {
         this.mass = mass;
         this.inverseMass = 1/mass;
-    }
-    
-    RecalulateInertia()
-    {        
-        //Calculating moment of inertia of a box
-        //https://uploads.toptal.io/blog/image/774/toptal-blog-image-1421917331379.png
-        this.inertia = (this.mass * ((this.collider.w * this.collider.w) + (this.collider.h * this.collider.h))) / 12;
     }
 
     //Takes a Vec2 that dictates force, and another to dictate the offset from the centre of the body where force should be applied.
@@ -88,31 +58,84 @@ class RigidBody
     {
         this.velocity.x += force.x / this.mass;
         this.velocity.y += force.y / this.mass;
-
-        this.AddTorque(force, positionOffset);
     }
 
-    AddTorque(force, positionOffset)
+    HandleDynamicCollision(staticBody)
     {
-        var torque = (force.y * positionOffset.x) - (force.x * positionOffset.y);
-        this.angularVelocity += -torque / (this.inertia);
-    }
-
-    //Takes a Vec2 that dictates the offset from the centre of the body.
-    GetTorque(distanceFromCentre) 
-    {
-        return Math.Cross(distanceFromCentre.x, distanceFromCentre.y, angularVelocity);
+        if (CheckCollision(this, staticBody) != false)
+			{
+				var collisionPoint = CheckCollision(this, staticBody);
+				if (collisionPoint.y < this.position.y - (this.collider.h * 0.4))
+				{
+					var yOverlap = (this.position.y - (this.collider.h * 0.5)) - collisionPoint.y;
+                    this.position.y -= yOverlap;
+                    this.canMoveDown = false;
+                }
+                if (collisionPoint.y > this.position.y + (this.collider.h * 0.4))
+				{
+					var yOverlap = (this.position.y + (this.collider.h * 0.5)) - collisionPoint.y;
+                    this.position.y -= yOverlap;
+                    this.canMoveUp = false;                    
+                }
+                if (collisionPoint.x < this.position.x - (this.collider.w * 0.4))
+				{
+					var yOverlap = (this.position.x - (this.collider.w * 0.5)) - collisionPoint.x;
+                    this.position.x -= yOverlap;
+                    this.canMoveLeft = false;
+                }
+                if (collisionPoint.x > this.position.x + (this.collider.w * 0.4))
+				{
+					var yOverlap = (this.position.x + (this.collider.w * 0.5)) - collisionPoint.x;
+                    this.position.x -= yOverlap;
+                    this.canMoveRight = false;
+				}
+			}
     }
     
-    Update(delta)
+    ResetConditions()
     {
-        //this.AddForce(Vec2.Multiply(Vec2.Multiply(this.gravity, this.mass), delta), new Vec2(0,0))
-        this.position = Vec2.Add(this.position, Vec2.Multiply(this.velocity, delta));
-        this.rotation += this.angularVelocity * delta;
+        this.canMoveDown = true;
+        this.canMoveUp = true;
+        this.canMoveLeft = true;
+        this.canMoveRight = true;
+    }
+    Update(delta)
+    {        
+        if (!this.canMoveDown)
+        {
+            if (this.velocity.y <= 0)
+                this.velocity.y = 0;
+        }
+        if (!this.canMoveLeft)
+        {
+            if (this.velocity.x <= 0)
+                this.velocity.x = 0;
+        }
+        if (!this.canMoveUp)
+        {
+            if (this.velocity.y >= 0)
+                this.velocity.y = 0;
+        }
+        if (!this.canMoveRight)
+        {
+            if (this.velocity.x >= 0)
+                this.velocity.x = 0;
+        }
+
         
+        if (!this.lockMovement)
+        {   
+            this.AddForce(Vec2.Multiply(Vec2.Multiply(this.gravity, this.mass), delta), new Vec2(0,0))
+            this.position = Vec2.Add(this.position, Vec2.Multiply(this.velocity, delta));
+        }
+        else
+        {
+            this.velocity = new Vec2(0,0);
+        }
+
         this.collider.x = this.position.x;
         this.collider.y = this.position.y;
-
+    
         //Turn this off when sprites are done
         this.collider.Draw('#550000', this.rotation);
     }

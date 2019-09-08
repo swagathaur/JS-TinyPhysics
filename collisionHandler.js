@@ -1,4 +1,4 @@
-function HandleCollision(body1, body2)
+function CheckCollision(body1, body2)
 {
     /*
     Axis1 = A.UR - A.UL
@@ -28,7 +28,7 @@ function HandleCollision(body1, body2)
     b2Scalar = results2[0];
     
     if (!CheckScalarCrossover(b1Scalar, b2Scalar))
-        return; 
+        return false; 
     colProjections[0] = GetCentrePoint(results1[1], results1[2], results2[1], results2[2], axis4);
         
     results1 = GetScalars(body1, axis2);
@@ -37,7 +37,7 @@ function HandleCollision(body1, body2)
     b2Scalar = results2[0];
     
     if (!CheckScalarCrossover(b1Scalar, b2Scalar))
-        return;
+        return false;
     colProjections[1] = GetCentrePoint(results1[1], results1[2], results2[1], results2[2], axis2);
 
     results1 = GetScalars(body1, axis3);
@@ -46,7 +46,7 @@ function HandleCollision(body1, body2)
     b2Scalar = results2[0];
     
     if (!CheckScalarCrossover(b1Scalar, b2Scalar))
-        return;
+        return false;
     colProjections[2] = GetCentrePoint(results1[1], results1[2], results2[1], results2[2], axis3);
 
     results1 = GetScalars(body1, axis4);
@@ -55,69 +55,12 @@ function HandleCollision(body1, body2)
     b2Scalar = results2[0];
     
     if (!CheckScalarCrossover(b1Scalar, b2Scalar))
-        return;
+        return false;
+        
     colProjections[3] = GetCentrePoint(results1[1], results1[2], results2[1], results2[2], axis4);
-
-    console.log("There is a collision");
-
-    //Prep values for averaging out the collision point.
-    //This is probably not 100% perfect, im just winging it here.
-    collisionPoint = GetCentre(colProjections);
-    collisionNormal = GetNormalFromPoint(body1,  body2, collisionPoint);
-    ResolveCollision(body1, body2, collisionPoint, collisionNormal);
+    //console.log("There is a collision");
+    return GetCentre(colProjections);
 }
-
-function GetNormalFromPoint(body1, body2, point)
-{
-    GetLeastPenetrativeAxis(body1, body2, point);
-    return GetLeastPenetrativeAxis(body1, body2, point);
-}
-
-function GetLeastPenetrativeAxis(body1, body2, point)
-{
-    point = Vec2.Subtract(point, body1.position);
-    minPen = 1000000;
-    returnVal = "null";
-    body1.GetAxis().forEach(axis => {
-        prj = Vec2.Project(point, axis);
-        penetration = Vec2.Distance(point,prj); 
-        if (penetration < minPen) 
-        {
-            minPen = penetration;
-            returnVal = axis;
-        }      
-    });
-    body2.GetAxis().forEach(axis => {
-        prj = Vec2.Project(point, axis);
-        penetration = Vec2.Distance(point,prj); 
-        if (penetration < minPen) 
-        {
-            minPen = penetration;
-            returnVal = axis;
-        }      
-    });
-    return returnVal;
-}
-
-function ResolveCollision(body1, body2, collisionPoint, collisionNormal)
-{
-    //Get the correct restitution value for bounce
-    restitution = body1.restitution > body2.restitution ? body2.restitution : body1.restitution;
-
-    //Get the relative velocity for the collision
-    relativeVelocity = Vec2.Subtract(body2.velocity, body1.velocity);
-    velocityAlongNormal = Dot(relativeVelocity, collisionNormal);
-
-    if (velocityAlongNormal > 0)
-        return;
-    
-    //Calculate the impact scale using the uh, directness of impact (velocity along the normal)
-    impulseScale = velocityAlongNormal * restitution;
-    
-    body1.AddForce(Vec2.Multiply(collisionNormal, impulseScale), collisionPoint);
-    body2.AddForce(Vec2.Multiply(collisionNormal, -impulseScale), collisionPoint);
-}
-
 function GetCentre(points)
 {
     var vec1 = Vec2.Add(points[0], points[1]);

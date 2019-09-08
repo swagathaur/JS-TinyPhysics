@@ -12,21 +12,23 @@ function timestamp()
 		return new Date().getTime();
 }
 
-var body1 = new RigidBody(new Rect(0, 0, .8, 1.5), 1, 1, false, false);
-var body2 = new RigidBody(new Rect(0, 0, 1, 0.5), 1, 1, false, false);
+var player = new RigidBody(new Rect(0, 0, .8, 1.5), 1, false);
+var body1 = new RigidBody(new Rect(0, 0, 1, 1), 1, false);
+var body2 = new RigidBody(new Rect(0, 0, 1, 0.5), 1, false);
+player.position = new Vec2(-3, -5);
 body1.position = new Vec2(5, -5);
 body2.position = new Vec2(6, -5);
 
-var topWall = new RigidBody(new Rect(0, 0, 10000, 1), 100000000, 1, true, true);
+var topWall = new RigidBody(new Rect(0, 0, 10000, 1), 100000000, true);
 topWall.position = new Vec2(0, 13);
-var bottomWall = new RigidBody(new Rect(0, 0, 10000, 1), 100000000, 1, true, true);
+var bottomWall = new RigidBody(new Rect(0, 0, 10000, 1), 100000000, true);
 bottomWall.position = new Vec2(0, -13);
-var leftWall = new RigidBody(new Rect(0, 0, 1, 10000), 100000000, 1, true, true);
+var leftWall = new RigidBody(new Rect(0, 0, 1, 10000), 100000000, true);
 leftWall.position = new Vec2(-23, 0);
-var rightWall = new RigidBody(new Rect(0, 0, 1, 10000), 100000000, 1, true, true);
+var rightWall = new RigidBody(new Rect(0, 0, 1, 10000), 100000000, true);
 rightWall.position = new Vec2(23, 0);
 
-dynamicBodies = [body1, body2];
+dynamicBodies = [player, body1, body2];
 staticBodies = [leftWall, rightWall, topWall, bottomWall];
 
 var testRect = new Rect(-10, 10, 1, 1);
@@ -59,23 +61,29 @@ const moveSpeed = 5;
 function update(dt)
 {
 	if (movement[keybinds.LEFT])
-		body1.AddForce(new Vec2(-.4, 0), new Vec2(0, 0));
+		player.AddForce(new Vec2(-.4, 0), new Vec2(0, 0));
 	if (movement[keybinds.RIGHT])
-		body1.AddForce(new Vec2(.4, 0), new Vec2(0, 0));
+		player.AddForce(new Vec2(.4, 0), new Vec2(0, 0));
 	if (movement[keybinds.UP])
-		body1.AddForce(new Vec2(0, .4), new Vec2(0, 0));
-	if (movement[keybinds.DOWN])
-		body1.AddForce(new Vec2(0, -.4), new Vec2(0, 0));
-
-	HandleCollision(body1, body2);
-	dynamicBodies.forEach(dynaBod => {
-		/*staticBodies.forEach(staticBod => {
-			staticBod.Update(dt);
-			HandleCollision(dynaBod, staticBod);
+	{
+		if (player.canMoveDown == false)
+		{			
+			player.AddForce(new Vec2(0, 13), new Vec2(0, 0));
+		}
+	}
+	
+	//Loop through in 5 steps to really correct the garbage collision at high speeds
+	for (i = 0; i < 5; i++)
+	{
+		dynamicBodies.forEach(dynaBod => {			
+			dynaBod.ResetConditions();
+			staticBodies.forEach(staticBod => {
+				staticBod.Update(dt);
+				dynaBod.HandleDynamicCollision(staticBod);
+			});	
+			dynaBod.Update(dt * 0.2);
 		});
-	*/
-		dynaBod.Update(dt);
-	});
+	}
 }
 
 var black = '#000000'
