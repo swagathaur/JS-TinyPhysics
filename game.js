@@ -14,8 +14,8 @@ function timestamp()
 
 var body1 = new RigidBody(new Rect(0, 0, .8, 1.5), 1, 1, false, false);
 var body2 = new RigidBody(new Rect(0, 0, 1, 0.5), 1, 1, false, false);
-body1.position = new Vec2(-1, 0);
-body2.position = new Vec2(1, 0);
+body1.position = new Vec2(5, -5);
+body2.position = new Vec2(6, -5);
 
 var topWall = new RigidBody(new Rect(0, 0, 10000, 1), 100000000, 1, true, true);
 topWall.position = new Vec2(0, 13);
@@ -69,10 +69,11 @@ function update(dt)
 
 	HandleCollision(body1, body2);
 	dynamicBodies.forEach(dynaBod => {
-		staticBodies.forEach(staticBod => {
+		/*staticBodies.forEach(staticBod => {
 			staticBod.Update(dt);
 			HandleCollision(dynaBod, staticBod);
 		});
+	*/
 		dynaBod.Update(dt);
 	});
 }
@@ -83,6 +84,7 @@ var red = '#550000'
 
 function GetCameraOffset()
 {	
+	//This doesnt use pixel-unit Ratio yet
 	return Vec2.Add(new Vec2(-cameraPosition.x, -cameraPosition.y), new Vec2(width / 2, height / 2));
 }
 

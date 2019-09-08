@@ -28,12 +28,34 @@ class Vec2
         return new Vec2(lhs.x / rhs, lhs.y / rhs);
     }
 
+    static RotatePointAroundPivot(point, pivot, rotation)
+    {
+        var sinVal = Math.sin(rotation);
+        var cosVal = Math.cos(rotation);
+
+        var translatedPoint = Vec2.Subtract(pivot, point);
+        translatedPoint = new Vec2( (translatedPoint.x * cosVal) - (translatedPoint.y * sinVal),
+                                    (translatedPoint.x * sinVal) + (translatedPoint.y * cosVal))                                    
+        return Vec2.Add(translatedPoint, pivot);
+    }
+
     //Projects a given point onto a directional vector
     static Project(point, direction)
     {
-        var tempVal = Dot(point, direction) / 
-                ((direction.x * direction.x) + (direction.y * direction.y));
-        return Vec2.Multiply(direction, tempVal)
+        var proj = new Vec2(
+            ( (point.x*direction.x + point.y*direction.y) / (direction.x*direction.x + direction.y*direction.y) ) * direction.x,
+            ( (point.x*direction.x + point.y*direction.y) / (direction.x*direction.x + direction.y*direction.y) ) * direction.y)
+        return proj;
+    }
+
+    static Distance(point1, point2)
+    {
+        var betweenVec = Vec2.Subtract(point2, point1);
+        return betweenVec.Magnitude();
+    }
+    Magnitude()
+    {
+        return Math.sqrt((this.x * this.x) + (this.y * this.y));
     }
 }
 function Dot(lhs, rhs)
@@ -48,12 +70,12 @@ function Cross(ax, ay, bx, by)
 
 function Cross(ax, ay, scaler)
 {
-    return Vec2(s * ay, -s * ax) ;
+    return new Vec2(scaler * ay, -scaler * ax) ;
 }
 
 function Cross(scaler, ax, ay)
 {
-    return Vec2(-s * ay, s * ax) ;
+    return new Vec2(-scaler * ay, scaler * ax) ;
 }
 
 function Distance(vecA, vecB)

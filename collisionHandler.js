@@ -28,11 +28,8 @@ function HandleCollision(body1, body2)
     b2Scalar = results2[0];
     
     if (!CheckScalarCrossover(b1Scalar, b2Scalar))
-        return;
-    if (b1Scalar.x < b2Scalar.x)
-        colProjections[0] = GetCentrePoint(results1[2], results2[1]);
-    else
-        colProjections[0] = GetCentrePoint(results1[1], results2[2]);
+        return; 
+    colProjections[0] = GetCentrePoint(results1[1], results1[2], results2[1], results2[2], axis4);
         
     results1 = GetScalars(body1, axis2);
     b1Scalar = results1[0];
@@ -41,10 +38,7 @@ function HandleCollision(body1, body2)
     
     if (!CheckScalarCrossover(b1Scalar, b2Scalar))
         return;
-    if (b1Scalar.x < b2Scalar.x)
-        colProjections[1] = GetCentrePoint(results1[2], results2[1]);
-    else
-        colProjections[1] = GetCentrePoint(results1[1], results2[2]);
+    colProjections[1] = GetCentrePoint(results1[1], results1[2], results2[1], results2[2], axis2);
 
     results1 = GetScalars(body1, axis3);
     b1Scalar = results1[0];
@@ -53,10 +47,7 @@ function HandleCollision(body1, body2)
     
     if (!CheckScalarCrossover(b1Scalar, b2Scalar))
         return;
-    if (b1Scalar.x < b2Scalar.x)
-        colProjections[2] = GetCentrePoint(results1[2], results2[1]);
-    else
-        colProjections[2] = GetCentrePoint(results1[1], results2[2]);
+    colProjections[2] = GetCentrePoint(results1[1], results1[2], results2[1], results2[2], axis3);
 
     results1 = GetScalars(body1, axis4);
     b1Scalar = results1[0];
@@ -65,27 +56,51 @@ function HandleCollision(body1, body2)
     
     if (!CheckScalarCrossover(b1Scalar, b2Scalar))
         return;
-    if (b1Scalar.x < b2Scalar.x)
-        colProjections[3] = GetCentrePoint(results1[2], results2[1]);
-    else
-        colProjections[3] = GetCentrePoint(results1[1], results2[2]);
+    colProjections[3] = GetCentrePoint(results1[1], results1[2], results2[1], results2[2], axis4);
 
     console.log("There is a collision");
 
     //Prep values for averaging out the collision point.
     //This is probably not 100% perfect, im just winging it here.
     collisionPoint = GetCentre(colProjections);
-    collisionNormal = Vec2.Subtract(body2.position, body1.position); //This is actually for spheres, should fix later.
-    console.log(collisionPoint);
+    collisionNormal = GetNormalFromPoint(body1,  body2, collisionPoint);
     ResolveCollision(body1, body2, collisionPoint, collisionNormal);
+}
+
+function GetNormalFromPoint(body1, body2, point)
+{
+    GetLeastPenetrativeAxis(body1, body2, point);
+    return GetLeastPenetrativeAxis(body1, body2, point);
+}
+
+function GetLeastPenetrativeAxis(body1, body2, point)
+{
+    point = Vec2.Subtract(point, body1.position);
+    minPen = 1000000;
+    returnVal = "null";
+    body1.GetAxis().forEach(axis => {
+        prj = Vec2.Project(point, axis);
+        penetration = Vec2.Distance(point,prj); 
+        if (penetration < minPen) 
+        {
+            minPen = penetration;
+            returnVal = axis;
+        }      
+    });
+    body2.GetAxis().forEach(axis => {
+        prj = Vec2.Project(point, axis);
+        penetration = Vec2.Distance(point,prj); 
+        if (penetration < minPen) 
+        {
+            minPen = penetration;
+            returnVal = axis;
+        }      
+    });
+    return returnVal;
 }
 
 function ResolveCollision(body1, body2, collisionPoint, collisionNormal)
 {
-    //Bad resolution, dlt this
-    //body1.position = Vec2.Subtract(body1.position, Vec2.Multiply(body1.velocity, 0.02));
-    //body2.position = Vec2.Subtract(body2.position, Vec2.Multiply(body2.velocity, 0.02));
-
     //Get the correct restitution value for bounce
     restitution = body1.restitution > body2.restitution ? body2.restitution : body1.restitution;
 
@@ -105,22 +120,21 @@ function ResolveCollision(body1, body2, collisionPoint, collisionNormal)
 
 function GetCentre(points)
 {
-    totalX = 0;
-    totalY = 0;
-    totalPoints = 0;
-
-    points.forEach(point => {
-        totalX += point.x;
-        totalY += point.y;
-        totalPoints += 1;
-    });
-
-    return new Vec2(totalX / totalPoints, totalY / totalPoints);
+    var vec1 = Vec2.Add(points[0], points[1]);
+    var vec2 = Vec2.Add(points[2], points[3]);
+    var centre = Vec2.Add(vec1, Vec2.Multiply(Vec2.Subtract(vec2, vec1), 0.5))
+    return centre;
 }
 
-function GetCentrePoint(point1, point2)
+function GetCentrePoint(point1, point2, point3, point4, axis)
 {
-    return Vec2.Add(Vec2.Multiply(Vec2.Subtract(point2, point1), 0.5), point1);
+    var points = [point1, point2, point3, point4];
+    points.sort(function (a, b) {
+        return Dot(a, axis) - Dot(b, axis);
+    });
+    //Sort the points based off Dot(point, axis)
+    //Return the midpoint between the 2nd and 3rd points in the sorted list.
+    return Vec2.Add(Vec2.Multiply(Vec2.Subtract(points[2], points[1]), 0.5), points[1]);
 }
 
 function CheckScalarCrossover(scalar1, scalar2)
@@ -160,6 +174,7 @@ function GetScalars(body, axis)
             maxScalar = scalar;          
             maxVec = projections[iterator];   
         }
+        iterator++;
     });
     return [new Vec2(minScalar, maxScalar), minVec, maxVec];
 }

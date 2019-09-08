@@ -26,39 +26,48 @@ class RigidBody
     
     UpperLeft()
     {
-        var sinVal = Math.sin(this.rotation);
-        var cosVal = Math.cos(this.rotation);
-        var x = -this.collider.w * 0.5;
-        var y = this.collider.h * 0.5;
-        return new Vec2(this.position.x + (x * cosVal) - (y * sinVal), this.position.y + (y * cosVal) + (x * sinVal));
+        var upperLeft = Vec2.Add(this.position, new Vec2(-this.collider.w * 0.5, this.collider.h * 0.5));
+        return Vec2.RotatePointAroundPivot(upperLeft, this.position, this.rotation);
     }
 
     UpperRight()
-    {
-        var sinVal = Math.sin(this.rotation);
-        var cosVal = Math.cos(this.rotation);
-        var x = this.collider.w * 0.5;
-        var y = this.collider.h * 0.5;
-        return new Vec2(this.position.x + (x * cosVal) - (y * sinVal), this.position.y + (y * cosVal) + (x * sinVal));
+    {        
+        var upperRight = Vec2.Add(this.position, new Vec2(this.collider.w * 0.5, this.collider.h * 0.5));
+        return Vec2.RotatePointAroundPivot(upperRight, this.position, this.rotation);
     }
 
     LowerLeft()
-    {
-        var sinVal = Math.sin(this.rotation);
-        var cosVal = Math.cos(this.rotation);
-        var x = -this.collider.w * 0.5;
-        var y = -this.collider.h * 0.5;
-        return new Vec2(this.position.x + (x * cosVal) - (y * sinVal), this.position.y + (y * cosVal) + (x * sinVal));
+    {        
+        var lowerLeft = Vec2.Add(this.position, new Vec2(-this.collider.w * 0.5, -this.collider.h * 0.5));
+        return Vec2.RotatePointAroundPivot(lowerLeft, this.position, this.rotation);
     }
     
     LowerRight()
     {
-        var sinVal = Math.sin(this.rotation);
-        var cosVal = Math.cos(this.rotation);
-        var x = this.collider.w * 0.5;
-        var y =  -this.collider.h * 0.5;
+        var lowerRight = Vec2.Add(this.position, new Vec2(this.collider.w * 0.5, -this.collider.h * 0.5));
+        return Vec2.RotatePointAroundPivot(lowerRight, this.position, this.rotation);
+    }
 
-        return new Vec2(this.position.x + (x * cosVal) - (y * sinVal), this.position.y + (y * cosVal) + (x * sinVal));
+    GetAxis()
+    {
+        var axis = [];
+        axis[0] = Vec2.Subtract(this.UpperRight(), this.UpperLeft());
+        axis[1] = Vec2.Subtract(this.UpperRight(), this.LowerRight());
+        axis[2] = Vec2.Subtract(this.LowerLeft(), this.LowerRight());
+        axis[3] = Vec2.Subtract(this.LowerLeft(), this.UpperLeft());
+        return axis;
+    }
+    
+    GetMinMaxProjections(axis)
+    {
+        projections = [Vec2.Project(UpperRight, axis),
+            Vec2.Project(UpperLeft, axis),
+            Vec2.Project(LowerRight, axis),
+            Vec2.Project(LowerLeft, axis)];
+            projections.sort(function (lhs, rhs) {
+                Dot(lhs, axis) - Dot(rhs, axis)
+            })
+        return [projections[0], projections[3]];
     }
 
     SetMass(mass)
