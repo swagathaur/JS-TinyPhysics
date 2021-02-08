@@ -1,4 +1,4 @@
-# JS13KBack
+# JS13K
 This is a gamejam and we only work in spare time, hyped up on lack of sleep. Please excuse the language.
 
 
