@@ -61,12 +61,14 @@ var dt = 0;
 var now;
 var last = timestamp();
 
-var sprite = createSprite("LeonsWeirdNakedGirlThing.png");
+var sprite = createSprite("BadSprite.png");
 
 function frame() {
 	
 	now = timestamp();
 	dt = (now - last) / 1000;
+	if (dt > 0.03)
+		dt = 0.03;
 	last = now;
 	
 	draw();
